@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -37,6 +38,7 @@ public class JwtUtil {
 		.build().parseSignedClaims(token).getPayload().getSubject();
 	}
 	
+	
 	public String getTokenFromCookie(HttpServletRequest request) {
 		if(request.getCookies() != null) {
 			for(Cookie cookie : request.getCookies() ) {
@@ -45,7 +47,6 @@ public class JwtUtil {
 				}
 			}
 		}
-		
 		return null;
 
 	}

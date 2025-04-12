@@ -1,5 +1,7 @@
 package com.springsecurity.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ public class UserEntity {
 	@Column(unique = true,nullable = false)
 	private String email;
 	@Column(name="password",length = 255,nullable = false)
+	@JsonIgnore
 	private String password;
 	@Column(unique = true,nullable = false)
 	private String userName;

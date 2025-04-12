@@ -36,8 +36,8 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+				.cors();
 				;
-				
 		return http.build();
 	}
 	

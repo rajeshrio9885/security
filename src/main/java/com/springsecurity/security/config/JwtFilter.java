@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -39,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter{
 		request.setAttribute("Authorization", token);
 		
 		if(token == null || !token.startsWith("Bearer"))
-		{
+		{	
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -51,7 +52,6 @@ public class JwtFilter extends OncePerRequestFilter{
 			
 			if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-				
 				if(jwtUtil.vaildateToken(subToken, userDetails)) {
 					UsernamePasswordAuthenticationToken authenticationToken = 
 							new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),userDetails.getAuthorities());
@@ -59,8 +59,10 @@ public class JwtFilter extends OncePerRequestFilter{
 					authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 				}
+			}else {
+				throw new Error("Invalid token");
 			}
-		} catch (Exception e) {
+		}catch(Exception e) {
 			
 			Map<String, String> res = new HashMap<>();
 			res.put("error", "Invalid user");
